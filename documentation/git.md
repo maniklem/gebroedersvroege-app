@@ -12,3 +12,6 @@ link release with tag
 git branch --merged master | grep -v '^[ *]*master$' | xargs git branch -d
 <!-- Prune remote -->
 git remote prune origin
+
+<!-- checkout and track remote branch -->
+git checkout --track origin/<branch>
