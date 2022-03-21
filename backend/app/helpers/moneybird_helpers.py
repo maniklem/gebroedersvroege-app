@@ -1,4 +1,4 @@
-import requests
+import requests, json
 
 
 class MoneyBird:
@@ -13,10 +13,30 @@ class MoneyBird:
 
     @classmethod
     def get_all_loonwerk_klanten(cls):
-        response = requests.get(
-            url=cls.base_url + "/contacts", headers=cls.get_auth_header()
-        )
-        return response.json()
+        loonwerk_klanten = []
+        page = 0
+        while True:
+            page += 1
+            response = requests.get(
+                url=cls.base_url + f"/contacts.json?page={page}",
+                headers=cls.get_auth_header(),
+            )
+            if response.json() == []:
+                break
+            loonwerk_klanten.append(
+                [
+                    x
+                    for x in response.json()
+                    if list(
+                        filter(
+                            lambda custom_field: custom_field["value"] == "loonwerk"
+                            and custom_field["name"] == "soort_klant",
+                            x["custom_fields"],
+                        )
+                    )
+                ]
+            )
+        return [item for sublist in loonwerk_klanten for item in sublist]
 
 
-print(MoneyBird.get_all_loonwerk_klanten())
+loonwerk_klanten = MoneyBird.get_all_loonwerk_klanten()
