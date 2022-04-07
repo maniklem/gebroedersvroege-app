@@ -1,15 +1,17 @@
-import requests, json
+import requests, json, os
 from pprint import pprint
 
 class MoneyBird:
 
-    version = "v2"
-    administration_id = "217115833077335589"
+    version = os.getenv("MONEYBIRD_VERSION", "v2")
+    administration_id = os.getenv("MONEYBIRD_ADMINISTRATION_ID")
+    bearer_token = os.getenv("MONEYBIRD_BEARER_TOKEN")
+
     base_url = f"https://moneybird.com/api/{version}/{administration_id}"
 
     @classmethod
     def get_auth_header(cls):
-        return {"Authorization": "Bearer 8S4N-aIMRAHJjxazp_QfB9dw0qUJtDy-WikkkXvLA_c"}
+        return {"Authorization": f"Bearer {cls.bearer_token}"}
 
     @classmethod
     def get_all_loonwerk_klanten(cls):
